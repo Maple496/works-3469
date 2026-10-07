@@ -13,8 +13,16 @@ function mainCreateCanvas(bounds) {
   return { canvas: canvas, g: g };
 }
 
+function mainUpdateHud() {
+  uiUpdateHud({
+    score: engineState.score,
+    lives: engineState.lives,
+    level: engineState.level
+  });
+}
+
 Work.register({
-  name: 'star-catch',
+  name: 'star-catch-relax',
   mount: function (ctx) {
     var made = mainCreateCanvas(ctx.bounds);
     made.canvas.style.position = 'absolute';
@@ -24,7 +32,8 @@ Work.register({
     mainCanvas = made.canvas;
 
     uiBuildOverlay(ctx.stage, ctx.bounds);
-    engineInit(made.g, ctx.bounds);
+    engineInit(made.g, ctx.bounds); // engineInit 内校准开局命数 = 3
+    mainUpdateHud();                // 开局即显示 3 条命
 
     mainKeyHandler = function (e) { engineOnKey(e); };
     window.addEventListener('keydown', mainKeyHandler);
@@ -32,6 +41,7 @@ Work.register({
 
     var loop = function (t) {
       engineStep(t);
+      mainUpdateHud(); // 每帧刷新剩余命数/分数显示
       uiRender(made.g);
       mainRafId = requestAnimationFrame(loop);
     };
@@ -45,6 +55,11 @@ Work.register({
       mainKeyHandler = null;
     }
     engineDispose();
+    uiHideModal();
+    if (uiOverlay && uiOverlay.parentNode) {
+      uiOverlay.parentNode.removeChild(uiOverlay);
+      uiOverlay = null;
+    }
     if (mainCanvas && mainCanvas.parentNode) {
       mainCanvas.parentNode.removeChild(mainCanvas);
     }

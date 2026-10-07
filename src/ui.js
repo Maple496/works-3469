@@ -1,5 +1,5 @@
 // src/ui.js —— 界面与渲染
-// 职责：stage 内 absolute 覆盖层（计分/弹窗）+ 每帧 canvas 绘制
+// 职责：stage 内 absolute 覆盖层（计分/剩余命数/弹窗）+ 每帧 canvas 绘制
 // 约束：所有覆盖层只能使用 position:absolute，绝不使用视口定位
 
 var uiOverlay = null;   // 计分板 DOM 引用
@@ -26,15 +26,15 @@ function uiBuildOverlay(stage, bounds) {
   stage.appendChild(uiOverlay);
 }
 
-// 更新计分板文本（分数/生命/等级）
+// 更新计分板文本（分数 / 剩余命数 / 等级）
 function uiUpdateHud(state) {
   if (!uiOverlay) return;
   var score = state && typeof state.score === 'number' ? state.score : 0;
-  var lives = state && typeof state.lives === 'number' ? state.lives : 0;
+  var lives = state && typeof state.lives === 'number' ? state.lives : 3;
   var level = state && typeof state.level === 'number' ? state.level : 1;
   uiOverlay.textContent =
     '分数: ' + score +
-    '   生命: ' + lives +
+    '   剩余命数: ' + lives + ' / 3' +
     '   等级: ' + level;
 }
 

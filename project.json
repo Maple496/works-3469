@@ -1,25 +1,25 @@
 {
-  "name": "星空接小球",
-  "brief": "操挡板弹跳接星，物理简单玩法爽快的Canvas街机小游戏。",
+  "name": "贪吃蛇工坊版",
+  "brief": "方向键控制的经典贪吃蛇，吃食物变长，撞墙撞身结束并显示分数。",
   "work_ref": "WORKS-3469",
   "entry": "src/main.js",
   "status": "ok",
   "files": [
     {
       "path": "src/engine.js",
-      "role": "状态与主循环：游戏状态机、物理更新、输入、碰撞判定"
+      "role": ""
     },
     {
       "path": "src/entities.js",
-      "role": "实体与规则：挡板、星星、粒子的数据结构与生成/更新逻辑"
+      "role": ""
     },
     {
       "path": "src/ui.js",
-      "role": "界面与渲染：DOM 覆盖层（计分板/弹窗）与 canvas 绘制"
+      "role": ""
     },
     {
       "path": "src/main.js",
-      "role": "入口：Work.register 容器合同，创建画布、装配模块、生命周期清理"
+      "role": ""
     }
   ],
   "generated_by": "proj_forge（AI 工程工坊）"

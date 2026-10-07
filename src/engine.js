@@ -22,7 +22,7 @@ function engineInit(g, bounds) {
   engineState.running = true;
   engineState.paused = false;
   engineState.score = 0;
-  engineState.lives = 3;
+  engineState.lives = 3; // 开局命数校准为 3
   engineState.level = 1;
   engineState.time = 0;
   engineLastT = 0;
@@ -62,9 +62,9 @@ function engineOnKey(e) {
 function engineUpdate(dt) {
   var paddle = (typeof getPaddle === 'function') ? getPaddle() : (typeof paddle !== 'undefined' ? paddle : null);
 
-  // 输入驱动挡板
+  // 输入驱动挡板；速度取自 entities 定义的挡板速度（已调慢），仅作兜底缺省
   if (paddle) {
-    var speed = paddle.speed || 320;
+    var speed = paddle.speed || 220;
     if (keys.left && !keys.right) {
       paddle.x -= speed * dt;
     } else if (keys.right && !keys.left) {
@@ -89,7 +89,7 @@ function engineUpdate(dt) {
       if (engineState.score >= engineState.level * 100) engineState.level += 1;
     } else if (ev.type === 'miss') {
       entitiesRemove(ev.entity);
-      engineState.lives -= 1;
+      engineState.lives -= 1; // 漏接一次扣一命
       if (engineState.lives <= 0) {
         engineState.lives = 0;
         engineState.running = false;

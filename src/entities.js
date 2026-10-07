@@ -10,12 +10,13 @@ var entities = {
 
 var PADDLE_W = 90;
 var PADDLE_H = 14;
-var PADDLE_SPEED = 380;   // px/s
+var PADDLE_SPEED = 304;   // px/s
 var PADDLE_MARGIN = 8;
 var STAR_MIN_R = 9;
 var STAR_MAX_R = 14;
-var STAR_BASE_VY = 80;    // 1 级基础下落速度
+var STAR_BASE_VY = 80;    // 1 级基础下落速度（基准值）
 var STAR_VY_PER_LEVEL = 25;
+var STAR_SPEED_FACTOR = 0.8; // 球（星）速整体 ×0.8 调慢
 var PARTICLE_LIFE = 0.6;
 
 function entitiesReset(bounds) {
@@ -31,15 +32,16 @@ function entitiesReset(bounds) {
   };
 }
 
-// 生成一颗星星（随机 x、下落速度随 level 提升）
+// 生成一颗星星（随机 x、下落速度随 level 提升，最终速度 = 基准 ×0.8）
 function entitiesSpawnStar(level) {
   var b = entities.bounds;
   var r = STAR_MIN_R + Math.random() * (STAR_MAX_R - STAR_MIN_R);
+  var baseVy = STAR_BASE_VY + (level || 1) * STAR_VY_PER_LEVEL * (0.75 + Math.random() * 0.5);
   var star = {
     x: r + Math.random() * (b.w - r * 2),
     y: -r - 2,
     r: r,
-    vy: STAR_BASE_VY + (level || 1) * STAR_VY_PER_LEVEL * (0.75 + Math.random() * 0.5),
+    vy: baseVy * STAR_SPEED_FACTOR, // 球速 ×0.8
     spin: (Math.random() * 2 - 1) * 3,
     rot: Math.random() * Math.PI * 2,
     miss: false
