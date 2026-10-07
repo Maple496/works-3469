@@ -32,6 +32,29 @@ function engineInit(g, bounds) {
   return engineState;
 }
 
+// 场地尺寸变化：更新 engineBounds 并同步实体场地，供 main 在窗口变化时调用
+function engineOnBounds(b) {
+  if (!b || typeof b.w !== 'number' || typeof b.h !== 'number') return engineBounds;
+  engineBounds = { w: b.w, h: b.h };
+  if (typeof entitiesBounds === 'function') {
+    entitiesBounds(engineBounds); // 通知 entities 同步场地尺寸
+  } else if (typeof entitiesReset === 'function') {
+    // 兜底：entities 未提供尺寸接口时，仅在布局极端异常时重排实体
+    entitiesReset(engineBounds);
+  }
+  // 挡板立即夹回新边界内，避免悬在场地外
+  var paddle = (typeof getPaddle === 'function') ? getPaddle() : (typeof paddle !== 'undefined' ? paddle : null);
+  if (paddle) {
+    var pw = paddle.w || 80;
+    if (paddle.x < 0) paddle.x = 0;
+    if (paddle.x + pw > engineBounds.w) paddle.x = engineBounds.w - pw;
+    if (typeof paddle.y === 'number' && paddle.y > engineBounds.h - 40) {
+      paddle.y = engineBounds.h - 40;
+    }
+  }
+  return engineBounds;
+}
+
 // 键盘事件（keydown/keyup 复用），控制挡板左右移动与开始/暂停
 function engineOnKey(e) {
   var down = e.type === 'keydown';
